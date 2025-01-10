@@ -1,16 +1,23 @@
----
+version: "3.9"
 name: ai-chatbot
 services:
+  builder:
+    image: node:lts-slim
+    container_name: ai-chatbot-builder
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: npm install --legacy-peer-deps && npm run dev
+
   server:
-    container_name: server
+    container_name: ai-chatbot-server
     build:
       context: ./
       dockerfile: Dockerfile.dev
+    depends_on:
+      - builder
     ports:
-      - "3000:3000"
-    volumes:
-      - ./:/app
-      - /app/node_modules
+      - "5000:5000"
     restart: 'unless-stopped'
     networks:
       - backend

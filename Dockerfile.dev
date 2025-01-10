@@ -1,18 +1,10 @@
-# NodeJS Version 16
 FROM node:lts-slim
 
-# Copy Dir
-COPY . ./app
-
-# Work to Dir
 WORKDIR /app
 
-# Install Node Package
+COPY package*.json ./
 RUN npm install --legacy-peer-deps
 
-# Set Env
-ENV NODE_ENV development
-EXPOSE 3000
+COPY . .
 
-# Cmd script
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "npm install --legacy-peer-deps && npm run dev"]
