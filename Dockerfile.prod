@@ -2,7 +2,7 @@
 FROM node:lts-slim
 
 # Copy Dir
-COPY . ./app
+COPY . .
 
 # Work to Dir
 WORKDIR /app
