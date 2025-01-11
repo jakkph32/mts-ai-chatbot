@@ -21,25 +21,66 @@ const client = new messagingApi.MessagingApiClient(clientConfig);
 
 // Function handler to receive the text.
 export const textEventHandler = async (event: webhook.Event): Promise<MessageAPIResponseBase | undefined> => {
-    // Process all variables here.
-
-    // Check if for a text message
-    if (event.type !== 'message' || event.message.type !== 'text') {
-        return;
+    try {
+        switch (event.type) {
+            case "follow":
+                if (event.follow.isUnblocked) {
+                    return
+                } else {
+                    return
+                }
+            case "message":
+                const replyToken = event.replyToken as string; // Declare and assign replyToken here
+                switch (event.message.type) {
+                    case "image":
+                        await client.replyMessage({
+                            replyToken, messages: [
+                                {
+                                    type: "text",
+                                    text: "Image 🙏"
+                                }
+                            ]
+                        });
+                    case "video":
+                        await client.replyMessage({
+                            replyToken, messages: [
+                                {
+                                    type: "text",
+                                    text: "Video 🙏"
+                                }
+                            ]
+                        });
+                    case "audio":
+                        await client.replyMessage({
+                            replyToken, messages: [
+                                {
+                                    type: "text",
+                                    text: "Audio 🙏"
+                                }
+                            ]
+                        });
+                    case "sticker":
+                        await client.replyMessage({
+                            replyToken, messages: [
+                                {
+                                    type: "text",
+                                    text: "Sticker 🙏"
+                                }
+                            ]
+                        });
+                        break
+                    default:
+                        await client.replyMessage({
+                            replyToken, messages: [
+                                {
+                                    type: "text",
+                                    text: "Sticker 🙏"
+                                }
+                            ]
+                        })
+                }
+        }
+    } catch (err) {
+        console.error(err);
     }
-
-    // Process all message related variables here.
-
-    // Check if message is repliable
-    if (!event.replyToken) return;
-
-    // Create a new message.
-    // Reply to the user.
-    await client.replyMessage({
-        replyToken: event.replyToken,
-        messages: [{
-            type: 'text',
-            text: event.message.text,
-        }],
-    });
-};
+}
