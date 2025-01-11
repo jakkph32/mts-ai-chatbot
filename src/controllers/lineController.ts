@@ -7,7 +7,6 @@ import {
 } from '@line/bot-sdk';
 import "dotenv/config";
 
-// Setup all LINE client and Express configurations.
 const clientConfig: ClientConfig = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN || '',
 };
@@ -16,90 +15,27 @@ export const middlewareConfig: MiddlewareConfig = {
     channelSecret: process.env.CHANNEL_SECRET || '',
 };
 
-// Create a new LINE SDK client.
 const client = new messagingApi.MessagingApiClient(clientConfig);
 
-// Function handler to receive the text.
 export const textEventHandler = async (event: webhook.Event): Promise<MessageAPIResponseBase | undefined> => {
     try {
-        switch (event.type) {
-            case "follow":
-                if (event.follow.isUnblocked) {
-                    return
-                } else {
-                    return
-                }
-            case "message":
-                const replyToken = event.replyToken as string; // Declare and assign replyToken here
-                switch (event.message.type) {
-                    case "image":
-                        await client.replyMessage({
-                            replyToken, messages: [
-                                {
-                                    type: "text",
-                                    text: "image 🙏"
-                                }
-                            ]
-                        });
-                    case "file":
-                        await client.replyMessage({
-                            replyToken, messages: [
-                                {
-                                    type: "text",
-                                    text: "file 🙏"
-                                }
-                            ]
-                        });
-                    case "location":
-                        await client.replyMessage({
-                            replyToken, messages: [
-                                {
-                                    type: "text",
-                                    text: "location 🙏"
-                                }
-                            ]
-                        });
-                    case "video":
-                        await client.replyMessage({
-                            replyToken, messages: [
-                                {
-                                    type: "text",
-                                    text: "video 🙏"
-                                }
-                            ]
-                        });
-                    case "audio":
-                        await client.replyMessage({
-                            replyToken, messages: [
-                                {
-                                    type: "text",
-                                    text: "audio 🙏"
-                                }
-                            ]
-                        });
-                    case "sticker":
-                        await client.replyMessage({
-                            replyToken, messages: [
-                                {
-                                    type: "text",
-                                    text: "sticker 🙏"
-                                }
-                            ]
-                        });
-                        break
-                    default:
-                        await client.replyMessage({
-                            replyToken, messages: [
-                                {
-                                    type: "text",
-                                    text: "Text 🙏"
-                                }
-                            ]
-                        });
-                        break
-                }
+        if (event.type === "follow") {
+            return; // No action needed for follow or unblocked events
+        } else if (event.type === "message" && event.message.type !== 'text') {
+            const replyToken = event.replyToken as string;
+            const messageType = event.message.type;
+            await client.replyMessage({
+                replyToken,
+                messages: [{ type: "text", text: `${messageType} 🙏` }]
+            });
+        } else if (event.type === "message" && event.message.type === 'text') {
+            const replyToken = event.replyToken as string;
+            await client.replyMessage({
+                replyToken,
+                messages: [{ type: "text", text: "Text 🙏" }]
+            });
         }
     } catch (err) {
         console.error(err);
     }
-}
+};
