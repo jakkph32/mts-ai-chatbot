@@ -41,6 +41,24 @@ export const textEventHandler = async (event: webhook.Event): Promise<MessageAPI
                                 }
                             ]
                         });
+                    case "file":
+                        await client.replyMessage({
+                            replyToken, messages: [
+                                {
+                                    type: "text",
+                                    text: "Image 🙏"
+                                }
+                            ]
+                        });
+                    case "location":
+                        await client.replyMessage({
+                            replyToken, messages: [
+                                {
+                                    type: "text",
+                                    text: "Image 🙏"
+                                }
+                            ]
+                        });
                     case "video":
                         await client.replyMessage({
                             replyToken, messages: [
@@ -68,16 +86,27 @@ export const textEventHandler = async (event: webhook.Event): Promise<MessageAPI
                                 }
                             ]
                         });
-                        break
-                    default:
+                    case "text":
                         await client.replyMessage({
                             replyToken, messages: [
                                 {
                                     type: "text",
-                                    text: "Sticker 🙏"
+                                    text: "Text 🙏"
                                 }
                             ]
-                        })
+                        });
+                        break
+                    default:
+                        await client.replyMessage({
+                            replyToken,
+                            messages: [
+                                {
+                                    type: "text",
+                                    text: event.message === 'text' ? `You said: ${event.message}` : "Unknown message type"
+                                }
+                            ]
+                        });
+                        break;
                 }
         }
     } catch (err) {
