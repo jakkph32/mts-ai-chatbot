@@ -37,7 +37,7 @@ export const textEventHandler = async (event: webhook.Event): Promise<MessageAPI
                             replyToken, messages: [
                                 {
                                     type: "text",
-                                    text: "Image 🙏"
+                                    text: "image 🙏"
                                 }
                             ]
                         });
@@ -46,7 +46,7 @@ export const textEventHandler = async (event: webhook.Event): Promise<MessageAPI
                             replyToken, messages: [
                                 {
                                     type: "text",
-                                    text: "Image 🙏"
+                                    text: "file 🙏"
                                 }
                             ]
                         });
@@ -55,7 +55,7 @@ export const textEventHandler = async (event: webhook.Event): Promise<MessageAPI
                             replyToken, messages: [
                                 {
                                     type: "text",
-                                    text: "Image 🙏"
+                                    text: "location 🙏"
                                 }
                             ]
                         });
@@ -64,7 +64,7 @@ export const textEventHandler = async (event: webhook.Event): Promise<MessageAPI
                             replyToken, messages: [
                                 {
                                     type: "text",
-                                    text: "Video 🙏"
+                                    text: "video 🙏"
                                 }
                             ]
                         });
@@ -73,7 +73,7 @@ export const textEventHandler = async (event: webhook.Event): Promise<MessageAPI
                             replyToken, messages: [
                                 {
                                     type: "text",
-                                    text: "Audio 🙏"
+                                    text: "audio 🙏"
                                 }
                             ]
                         });
@@ -82,11 +82,12 @@ export const textEventHandler = async (event: webhook.Event): Promise<MessageAPI
                             replyToken, messages: [
                                 {
                                     type: "text",
-                                    text: "Sticker 🙏"
+                                    text: "sticker 🙏"
                                 }
                             ]
                         });
-                    case "text":
+                        break
+                    default:
                         await client.replyMessage({
                             replyToken, messages: [
                                 {
@@ -96,17 +97,6 @@ export const textEventHandler = async (event: webhook.Event): Promise<MessageAPI
                             ]
                         });
                         break
-                    default:
-                        await client.replyMessage({
-                            replyToken,
-                            messages: [
-                                {
-                                    type: "text",
-                                    text: event.message === 'text' ? `You said: ${event.message}` : "Unknown message type"
-                                }
-                            ]
-                        });
-                        break;
                 }
         }
     } catch (err) {
