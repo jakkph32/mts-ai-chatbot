@@ -1,4 +1,3 @@
-
 import {
     ClientConfig,
     MessageAPIResponseBase,
@@ -7,6 +6,7 @@ import {
     webhook,
 } from '@line/bot-sdk';
 import "dotenv/config";
+import { geminiChat } from '../utils/gemini';
 
 const clientConfig: ClientConfig = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN || '',
@@ -20,6 +20,10 @@ const client = new messagingApi.MessagingApiClient(clientConfig);
 
 export const textEventHandler = async (event: webhook.Event): Promise<MessageAPIResponseBase | undefined> => {
     try {
+        if (event.source?.userId) await client.showLoadingAnimation({
+            chatId: event.source?.userId as string
+        })
+
         if (event.type === "follow") {
             return; // No action needed for follow or unblocked events
         } else if (event.type === "message" && event.message.type !== 'text') {
@@ -31,12 +35,21 @@ export const textEventHandler = async (event: webhook.Event): Promise<MessageAPI
             });
         } else if (event.type === "message" && event.message.type === 'text') {
             const replyToken = event.replyToken as string;
+            const msg = await geminiChat(event.message.text)
             await client.replyMessage({
                 replyToken,
-                messages: [{ type: "text", text: "Text 🙏" }]
+                messages: [{
+                    type: "text",
+                    sender: {
+                        name: "มิตา",
+                        iconUrl: "https://mita-chatbot.vercel.app/images/mita_avatar.jpg",
+                    },
+                    text: msg,
+                }]
             });
         }
     } catch (err) {
         console.error(err);
+        return;
     }
 };

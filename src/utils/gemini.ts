@@ -27,13 +27,18 @@ export const geminiChat = async (prompt: string) => {
     })
 
     try {
-        return;
-    } catch (error) {
-        console.error(error)
+        const chat = model.startChat();
 
-        return;
+        const result = await chat.sendMessage(prompt);
+
+        return result.response.text();
+    } catch (error) {
+        console.error("Error interacting with Gemini:", error);
+        return "An error occurred. Please try again later.";
+
     }
 }
+
 export const geminiMultiModal = async (imageBinary: string) => {
     const mimeType = "image/png";
 
